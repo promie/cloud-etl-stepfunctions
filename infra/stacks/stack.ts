@@ -1,6 +1,7 @@
 import { Stack, StackProps } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { CustomerTableConstruct } from './constructs/storage/customerTable.construct'
+import { AuthenticationConstruct } from './constructs/auth/authentication.construct'
 
 export type CloudETLStepFunctionsStackProps = StackProps & {
   appName: string
@@ -8,8 +9,6 @@ export type CloudETLStepFunctionsStackProps = StackProps & {
 }
 
 export class CloudETLStepFunctionsStack extends Stack {
-  public readonly apiUrl: string
-
   constructor(
     scope: Construct,
     id: string,
@@ -20,6 +19,11 @@ export class CloudETLStepFunctionsStack extends Stack {
     const { appName, stage } = props
 
     const { table } = new CustomerTableConstruct(this, 'CustomerTable', {
+      appName,
+      stage,
+    })
+
+    const authentication = new AuthenticationConstruct(this, 'Authentication', {
       appName,
       stage,
     })
